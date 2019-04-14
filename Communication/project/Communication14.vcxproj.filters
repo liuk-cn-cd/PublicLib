@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="UDP">
+      <UniqueIdentifier>{e77066e1-d835-4acc-9950-dc292aa944e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TCP">
+      <UniqueIdentifier>{ba96c79f-f137-44bb-a1b9-2a1cd9cdbfd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FTP">
+      <UniqueIdentifier>{f04e919b-bf36-4638-a5af-5b4157bd7ccc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\communication_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CommuDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TCP\TcpServer.h">
+      <Filter>TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TCP\TcpClient.h">
+      <Filter>TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UDP\UdpSocket.h">
+      <Filter>UDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UDP\UdpUnicast.h">
+      <Filter>UDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UDP\UdpMulticast.h">
+      <Filter>UDP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SocketNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TCP\TcpClientInfo.h">
+      <Filter>TCP</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\TCP\TcpServer.cpp">
+      <Filter>TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TCP\TcpClient.cpp">
+      <Filter>TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UDP\UdpMulticast.cpp">
+      <Filter>UDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UDP\UdpSocket.cpp">
+      <Filter>UDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UDP\UdpUnicast.cpp">
+      <Filter>UDP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SocketNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TCP\TcpClientInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

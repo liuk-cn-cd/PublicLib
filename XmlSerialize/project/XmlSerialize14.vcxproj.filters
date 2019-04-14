@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="tinyXml">
+      <UniqueIdentifier>{c3e9c38c-fb27-4c39-82ed-2c9635b4a71f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\tinyXml\tinystr.cpp">
+      <Filter>tinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tinyXml\tinyxml.cpp">
+      <Filter>tinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tinyXml\tinyxmlerror.cpp">
+      <Filter>tinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tinyXml\tinyxmlparser.cpp">
+      <Filter>tinyXml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\XmlSerializeObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\XmlElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\XmlStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\XmlDocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\tinyXml\tinystr.h">
+      <Filter>tinyXml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tinyXml\tinyxml.h">
+      <Filter>tinyXml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlSerializeObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlSerialize_Global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlSerializeMacro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\XmlDocument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+#ifndef BINARYSERIALIZE_GLOBAL_H
+#define BINARYSERIALIZE_GLOBAL_H
+
+#ifdef BINARYSERIALIZE_LIB
+# define BINARYSERIALIZE_EXPORT __declspec(dllexport)
+#else
+# define BINARYSERIALIZE_EXPORT __declspec(dllimport)
+#endif
+
+#endif // BINARYSERIALIZE_GLOBAL_H
