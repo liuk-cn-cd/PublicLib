@@ -14,7 +14,7 @@
  * @contact	: liukangx@hotmail.com
  * 
  */
-#include "TCP\TcpClientInfo.h"
+#include "TcpClientInfo.h"
 
 
 

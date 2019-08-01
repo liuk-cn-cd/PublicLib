@@ -14,8 +14,11 @@
  * @contact	: liukangx@hotmail.com
  * 
  */
-#include "TCP\TcpClient.h"
+#include "TcpClient.h"
+#include <string.h>
 #include "SocketNode.h"
+
+
 
 enum
 {
@@ -46,7 +49,11 @@ bool CTcpClient::ConnectServer(const std::string& strServerIp, unsigned short us
 	SOCKADDR_IN addrSer;
 	addrSer.sin_family = AF_INET;
 	addrSer.sin_port = htons(usPort);
+#ifdef WIN32
 	addrSer.sin_addr.S_un.S_addr = inet_addr(strServerIp.c_str());
+#elif linux
+    addrSer.sin_addr.s_addr = inet_addr(strServerIp.c_str());
+#endif
 
 	m_hSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_hSocket == INVALID_SOCKET)
@@ -76,7 +83,11 @@ bool CTcpClient::DisConnect()
 	if (m_hSocket != INVALID_SOCKET)
 	{
 		shutdown(m_hSocket, 1);
+#ifdef WIN32
 		closesocket(m_hSocket);
+#elif linux
+        close(m_hSocket);
+#endif
 		if (IsRunning())
 		{
 			//  关闭后退出线程
@@ -136,12 +147,16 @@ void CTcpClient::run()
 	{
 		memset(m_pRecvBuffer, 0, E_TCP_RECV_BUFFER_SIZE);
 
-		int nBufLen = recv(m_hSocket, m_pRecvBuffer, E_TCP_RECV_BUFFER_SIZE, 0);
+        int nBufLen = recv(m_hSocket, m_pRecvBuffer, E_TCP_RECV_BUFFER_SIZE, 0);
 		if (nBufLen < 0)
 		{
 			Quit();
 			continue;
 		}
+        if(nBufLen == 0)
+        {
+            continue;
+        }
 		CSocketNode node;
 		node.SetSrcAddr(m_strIp, m_usPort);
 		node.SetData((unsigned char*)m_pRecvBuffer, nBufLen);

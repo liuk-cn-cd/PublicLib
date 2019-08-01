@@ -14,7 +14,8 @@
  * @contact	: liukangx@hotmail.com
  * 
  */
-#include "TCP\TcpServer.h"
+#include "TcpServer.h"
+#include <string.h>
 #include <set>
 enum
 {
@@ -26,7 +27,7 @@ CTcpServer::CTcpServer()
 	: m_hSocket(INVALID_SOCKET)
 	, m_strError("")
 	, m_usPort(0)
-	, m_pUser(NULL)
+	, m_pUser(nullptr)
 	, m_bIsService(false)
 {
 	m_pRecvBuffer = new char[E_TCP_RECV_BUFFER_SIZE];
@@ -66,7 +67,7 @@ bool CTcpServer::InitServer(std::string strServerIp, unsigned short usPort)
 	}
 	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)
 	{
-		//若不是所请求的版本号2.2,则终止WinSock库的使用  
+		//若不是所请求的版本号2.2,则终止WinSock库的使用  
 		WSACleanup();
 		m_strError = "Version failed, version isn't 2.2!";
 		return false;
@@ -97,12 +98,13 @@ bool CTcpServer::InitServer(std::string strServerIp, unsigned short usPort)
 		return false;
 	}
 
-		//填充服务器端套接字结构  
-	sockaddr_in addrServer;
+		//填充服务器端套接字结构  
+    SOCKADDR_IN addrServer;
 
-	//将主机字节顺序转换为TCP/IP网络字节顺序  
+	//将主机字节顺序转换为TCP/IP网络字节顺序  
 	addrServer.sin_family = AF_INET;
 	addrServer.sin_port = htons(m_usPort);
+#ifdef WIN32
 	if (strServerIp.empty())
 	{
 		addrServer.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
@@ -111,8 +113,18 @@ bool CTcpServer::InitServer(std::string strServerIp, unsigned short usPort)
 	{
 		addrServer.sin_addr.S_un.S_addr = inet_addr(strServerIp.c_str());
 	}
+#elif linux
+    if (strServerIp.empty())
+    {
+        addrServer.sin_addr.s_addr = htonl(INADDR_ANY);
+    }
+    else
+    {
+        addrServer.sin_addr.s_addr = inet_addr(strServerIp.c_str());
+    }
+#endif
 
-	//将套接字绑定到一个本地地址和端口上  
+	//将套接字绑定到一个本地地址和端口上  
 	if (bind(m_hSocket, (SOCKADDR*)&addrServer, sizeof(SOCKADDR)) == SOCKET_ERROR) {
 		char szError[256];
 		memset(szError, 0, 256);
@@ -175,7 +187,11 @@ void CTcpServer::DeleteClient(SocketHandle hClinet)
 	{
 		return;
 	}
+#ifdef WIN32
 	closesocket(hClinet);
+#elif linux
+    close(hClinet);
+#endif
 	m_mapSocketAddr.erase(itr);
 }
 
@@ -202,7 +218,11 @@ void CTcpServer::CloseService()
 	if (m_hSocket != INVALID_SOCKET)
 	{
 		shutdown(m_hSocket, 1);
-		closesocket(m_hSocket);
+#ifdef WIN32
+        closesocket(m_hSocket);
+#elif linux
+        close(m_hSocket);
+#endif
 		if (IsRunning())
 		{
 			//  关闭后退出线程
@@ -243,7 +263,7 @@ void CTcpServer::run()
 	{
 		int nMaxId = -1;
 		activeSet = allSet;
-#ifdef LINUX
+#ifdef linux
 
 #endif
 		timeval tm;
@@ -251,7 +271,7 @@ void CTcpServer::run()
 		tm.tv_usec = 200000;
 		// windows中，第一个参数已经无用，为了保持接口一致而留存
 		// 检查套接字动作，有动作的套接字会放入activeSet
-		int nRet = select(nMaxId + 1, &activeSet, NULL, NULL,  &tm);
+		int nRet = select(nMaxId + 1, &activeSet, nullptr, nullptr,  &tm);
 		if (nRet < 0)
 		{
 			Quit();
@@ -269,7 +289,7 @@ void CTcpServer::run()
 			if (FD_ISSET(m_hSocket, &activeSet) != 0)
 			{
 				sockaddr_in addrClient;
-				int nLen;
+                socklen_t nLen;
 				SocketHandle hClientSock;
 				if ((hClientSock = accept(m_hSocket, (sockaddr*)&addrClient, &nLen)) < 0)
 				{
@@ -281,7 +301,7 @@ void CTcpServer::run()
 				clientInfo.SetIp(inet_ntoa(addrClient.sin_addr));
 				clientInfo.SetPort(ntohs(addrClient.sin_port));
 				m_mapSocketAddr[hClientSock] = clientInfo;
-				if (NULL != m_pUser)
+				if (nullptr != m_pUser)
 				{
 					m_pUser->OnClinetConnected(clientInfo.GetIp(), clientInfo.GetPort());
 				}
@@ -290,10 +310,18 @@ void CTcpServer::run()
 			}
 
 			// 接收数据部分
-			for (int i = 0; i < activeSet.fd_count; ++i)
-			{
-				SocketHandle handleClient = activeSet.fd_array[i];
-				if (m_mapSocketAddr.find(handleClient) == m_mapSocketAddr.end())
+            for (int i = 0; i < 1024; ++i)
+            {
+#ifdef WIN32
+                SocketHandle handleClient = activeSet.fd_array[i];
+#elif linux
+                if(0 == FD_ISSET(i, &activeSet))
+                {
+
+                }
+                SocketHandle handleClient = i;
+#endif
+                if (m_mapSocketAddr.find(handleClient) == m_mapSocketAddr.end())
 				{
 					continue;
 				}
@@ -301,12 +329,17 @@ void CTcpServer::run()
 				CTcpClientInfo clientInfo = m_mapSocketAddr[handleClient];
 
 				memset(m_pRecvBuffer, 0, E_TCP_RECV_BUFFER_SIZE);
-				m_nRecvBufferLen = recv(handleClient, m_pRecvBuffer, E_TCP_RECV_BUFFER_SIZE, 0);
+                m_nRecvBufferLen = recv(handleClient, m_pRecvBuffer, E_TCP_RECV_BUFFER_SIZE, 0);
+                if(m_nRecvBufferLen == 0)
+                {
+                    continue;
+                }
+
 				// 收到的数据长度小于0，则说明客户端掉线
 				if (m_nRecvBufferLen < 0)
 				{
 					FD_CLR(handleClient, &allSet);
-					if (NULL != m_pUser)
+					if (nullptr != m_pUser)
 					{
 						m_pUser->OnClientDisconnetcted(clientInfo.GetIp(), clientInfo.GetPort());
 					}
@@ -316,7 +349,7 @@ void CTcpServer::run()
 				CSocketNode node;
 				node.SetSrcAddr(clientInfo.GetIp(), clientInfo.GetPort());
 				node.SetData((unsigned char*)m_pRecvBuffer, m_nRecvBufferLen);
-				if (NULL != m_pUser)
+				if (nullptr != m_pUser)
 				{
 					m_pUser->OnTcpRead(node);
 				}

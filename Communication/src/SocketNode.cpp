@@ -15,14 +15,14 @@
  * 
  */
 #include "SocketNode.h"
-
+#include <string.h>
 
 
 CSocketNode::CSocketNode()
-	: m_usSrcPort(-1)
-	, m_strSrcIp("")
-	, m_nSize(0)
-	, m_pData(NULL)
+    : m_strSrcIp("")
+    , m_usSrcPort(0)
+    , m_pData(nullptr)
+    , m_nSize(0)
 {
 }
 
@@ -72,10 +72,10 @@ void CSocketNode::SetSrcAddr(const std::string& strIp, unsigned short usPort)
 
 void CSocketNode::Clear()
 {
-	if (NULL != m_pData)
+	if (nullptr != m_pData)
 	{
 		delete m_pData;
-		m_pData = NULL;
+		m_pData = nullptr;
 		
 	}
 	m_nSize = 0;

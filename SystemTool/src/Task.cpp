@@ -5,24 +5,43 @@
  *     如有疑问请联系作者。
  * @特别声明结束
  ********************************************************************/
+
 /**
- * @file	: UdpUnicast.cpp
- * @brief	:
+ * @file	: Task.cpp
+ * @brief	: 任务类实现文件
  * @author	: liuk
- * @date	: 2017/05/06 10:12:19
+ * @date	: 2016/12/18 17:05:48
  * @version : 1.0.0.0
  * @contact	: liukangx@hotmail.com
  * 
  */
-#include "UdpUnicast.h"
+#include "Task.h"
+#ifdef WIN32
+#include <process.h>
+#elif linux
+
+#endif
 
 
-
-CUdpUnicast::CUdpUnicast()
+CTask::CTask():m_pUser(nullptr)
 {
+	
 }
 
 
-CUdpUnicast::~CUdpUnicast()
+CTask::~CTask()
 {
+}
+
+void CTask::Attach(ITaskUser* pUser)
+{
+	m_pUser = pUser;
+}
+
+void CTask::run()
+{
+	if (nullptr != m_pUser)
+	{
+		m_pUser->OnRunTask(this);
+	}
 }
